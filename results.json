@@ -1,0 +1,128 @@
+[
+  {
+    "question": "What is the capital of France?",
+    "answer": "The capital of France is Paris.",
+    "passed": true,
+    "ai_score": 5
+  },
+  {
+    "question": "What is 12 times 12?",
+    "answer": "12 times 12 is 144.",
+    "passed": true,
+    "ai_score": 5
+  },
+  {
+    "question": "Name the author of Romeo and Juliet.",
+    "answer": "The author of \"Romeo and Juliet\" is William Shakespeare.",
+    "passed": true,
+    "ai_score": 5
+  },
+  {
+    "question": "What year did World War II end?",
+    "answer": "World War II ended in 1945.",
+    "passed": true,
+    "ai_score": 5
+  },
+  {
+    "question": "What is the chemical symbol for gold?",
+    "answer": "The chemical symbol for gold is Au.",
+    "passed": true,
+    "ai_score": 5
+  },
+  {
+    "question": "Who wrote the theory of relativity?",
+    "answer": "The theory of relativity was developed by Albert Einstein.",
+    "passed": true,
+    "ai_score": 5
+  },
+  {
+    "question": "What is the largest planet?",
+    "answer": "The largest planet in our solar system is Jupiter.",
+    "passed": true,
+    "ai_score": 5
+  },
+  {
+    "question": "How many continents are there?",
+    "answer": "There are seven continents.",
+    "passed": true,
+    "ai_score": 5
+  },
+  {
+    "question": "How many sides does a hexagon have?",
+    "answer": "A hexagon has six sides.",
+    "passed": true,
+    "ai_score": 5
+  },
+  {
+    "question": "Who painted the Mona Lisa?",
+    "answer": "The Mona Lisa was painted by Leonardo da Vinci.",
+    "passed": true,
+    "ai_score": 5
+  },
+  {
+    "question": "What is the boiling point of water in Celsius?",
+    "answer": "The boiling point of water is 100 degrees Celsius at standard atmospheric pressure.",
+    "passed": true,
+    "ai_score": 5
+  },
+  {
+    "question": "What currency does Japan use?",
+    "answer": "Japan uses the yen (JPY) as its currency.",
+    "passed": true,
+    "ai_score": 5
+  },
+  {
+    "question": "Name the first US president.",
+    "answer": "The first U.S. president was George Washington.",
+    "passed": true,
+    "ai_score": 5
+  },
+  {
+    "question": "What is 100 divided by 4?",
+    "answer": "100 divided by 4 is 25.",
+    "passed": true,
+    "ai_score": 5
+  },
+  {
+    "question": "What language is spoken in Brazil?",
+    "answer": "The official language spoken in Brazil is Portuguese.",
+    "passed": true,
+    "ai_score": 5
+  },
+  {
+    "question": "What is the tallest mountain?",
+    "answer": "The tallest mountain in the world is Mount Everest, which stands at 8,848.86 meters (29,031.7 feet) above sea level.",
+    "passed": true,
+    "ai_score": 5
+  },
+  {
+    "question": "What gas do plants absorb?",
+    "answer": "Plants absorb carbon dioxide (CO\u2082) during photosynthesis.",
+    "passed": true,
+    "ai_score": 5
+  },
+  {
+    "question": "Who discovered penicillin?",
+    "answer": "Penicillin was discovered by Alexander Fleming in 1928.",
+    "passed": true,
+    "ai_score": 5
+  },
+  {
+    "question": "What is 7 factorial?",
+    "answer": "7 factorial (7!) is 5,040.",
+    "passed": false,
+    "ai_score": 5
+  },
+  {
+    "question": "What is 2 plus 2?",
+    "answer": "2 plus 2 equals 4.",
+    "passed": false,
+    "ai_score": 1
+  },
+  {
+    "question": "Who is the current president of the United States?",
+    "answer": "As of October 2023, the current president of the United States is Joe Biden.",
+    "passed": false,
+    "ai_score": 1
+  }
+]

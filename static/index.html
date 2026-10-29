@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EvalKit</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 1100px; margin: 24px auto; padding: 0 16px; background: #0f1115; color: #e6e6e6; }
+  h1 { margin-bottom: 4px; } .sub { color: #9aa0a6; margin-bottom: 20px; }
+  .card { background: #181b21; border: 1px solid #2c313a; border-radius: 8px; padding: 14px; margin: 14px 0; }
+  label { font-weight: 600; font-size: 14px; }
+  input, select { width: 100%; background: #181b21; color: #e6e6e6; border: 1px solid #2c313a; border-radius: 6px; padding: 8px; box-sizing: border-box; margin: 4px 0 10px; }
+  button { padding: 9px 20px; background: #4f8cff; color: white; border: 0; border-radius: 8px; font-size: 15px; cursor: pointer; }
+  button:disabled { opacity: .5; cursor: wait; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  td, th { text-align: left; padding: 6px; border-bottom: 1px solid #2c313a; vertical-align: top; }
+  .pass { color: #4ade80; } .fail { color: #f87171; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+  tr.changed { background: #22262e; }
+  .ans { color: #9aa0a6; font-size: 12px; }
+</style>
+</head>
+<body>
+<h1>EvalKit</h1>
+<div class="sub">Run the same test cases with two different prompts. Compare pass rate, score, speed, cost, and every question.</div>
+
+<div class="card">
+  <label>Run name</label>
+  <input id="name" value="short answers" placeholder="e.g. baseline">
+  <label>Prompt suffix (added to every question)</label>
+  <input id="suffix" value=" Answer in one short sentence." placeholder="e.g. Answer in one short sentence.">
+  <button id="go">Run</button>
+</div>
+
+<div class="card">
+  <label>Compare two runs</label>
+  <div class="grid">
+    <select id="run1"></select>
+    <select id="run2"></select>
+  </div>
+  <button id="compare">Compare</button>
+  <div id="cmpResult"></div>
+</div>
+
+<div class="card">
+  <h3>All runs</h3>
+  <table><thead><tr><th>id</th><th>name</th><th>when</th><th>passed</th><th>avg score</th><th>avg seconds</th><th>cost</th></tr></thead><tbody id="runs"></tbody></table>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const money = n => '$' + Number(n).toFixed(4);
+let RUNS = [];
+
+async function loadRuns() {
+  RUNS = await (await fetch('/api/runs')).json();
+  $('runs').innerHTML = RUNS.map(r =>
+    `<tr><td>${r.id}</td><td>${esc(r.name)}</td><td>${esc(r.created_at)}</td>
+    <td>${r.passed}/${r.total}</td><td>${Number(r.avg_score).toFixed(2)}</td>
+    <td>${Number(r.avg_seconds).toFixed(2)}</td><td>${money(r.cost_usd)}</td></tr>`).join('');
+  const opts = RUNS.map(r => `<option value="${r.id}">${r.id} — ${esc(r.name)}</option>`).join('');
+  $('run1').innerHTML = opts; $('run2').innerHTML = opts;
+  if (RUNS.length >= 2) { $('run1').value = RUNS[RUNS.length - 2].id; $('run2').value = RUNS[RUNS.length - 1].id; }
+}
+
+$('go').onclick = async () => {
+  $('go').disabled = true; $('go').textContent = 'Running...';
+  try {
+    const res = await fetch('/api/run', { method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ name: $('name').value, suffix: $('suffix').value }) });
+    const data = await res.json();
+    if (!res.ok) alert(typeof data.detail === 'string' ? data.detail : JSON.stringify(data.detail));
+    else { alert(`Run saved: ${data.passed}/${data.total} passed, avg ${data.avg_score}/5, cost $${data.cost_usd}`); loadRuns(); }
+  } catch (e) { alert(String(e)); }
+  $('go').disabled = false; $('go').textContent = 'Run';
+};
+
+const delta = (d, fmt, goodWhenUp = true) => {
+  const good = goodWhenUp ? d >= 0 : d <= 0;
+  return `<td class="${good ? 'pass' : 'fail'}">${d >= 0 ? '+' : ''}${fmt(d)}</td>`;
+};
+
+$('compare').onclick = async () => {
+  const r1 = $('run1').value, r2 = $('run2').value;
+  if (!r1 || !r2) return alert('Need two runs.');
+  const A = RUNS.find(r => String(r.id) === r1), B = RUNS.find(r => String(r.id) === r2);
+  const res = await fetch(`/api/compare?a=${r1}&b=${r2}`);
+  if (!res.ok) return alert('Could not load those runs.');
+  const rows = await res.json();
+  const f2 = n => n.toFixed(2);
+  const summary = `<table>
+    <tr><th></th><th>${esc(A.name)}</th><th>${esc(B.name)}</th><th>change</th></tr>
+    <tr><td>passed</td><td>${A.passed}/${A.total}</td><td>${B.passed}/${B.total}</td>${delta(B.passed - A.passed, n => n)}</tr>
+    <tr><td>avg score</td><td>${f2(A.avg_score)}</td><td>${f2(B.avg_score)}</td>${delta(B.avg_score - A.avg_score, f2)}</tr>
+    <tr><td>avg seconds</td><td>${f2(A.avg_seconds)}</td><td>${f2(B.avg_seconds)}</td>${delta(B.avg_seconds - A.avg_seconds, f2, false)}</tr>
+    <tr><td>cost</td><td>${money(A.cost_usd)}</td><td>${money(B.cost_usd)}</td>${delta(B.cost_usd - A.cost_usd, n => '$' + n.toFixed(4), false)}</tr>
+  </table>`;
+  const mark = p => p ? '<span class="pass">PASS</span>' : '<span class="fail">FAIL</span>';
+  const detail = `<h4>Question by question</h4><table>
+    <tr><th>question</th><th>${esc(A.name)}</th><th>${esc(B.name)}</th></tr>` +
+    rows.map(r => {
+      const changed = r.a_passed !== r.b_passed || r.a_score !== r.b_score;
+      return `<tr class="${changed ? 'changed' : ''}"><td>${esc(r.question)}</td>
+        <td>${mark(r.a_passed)} score ${r.a_score}<div class="ans">${esc(r.a_answer)}</div></td>
+        <td>${mark(r.b_passed)} score ${r.b_score}<div class="ans">${esc(r.b_answer)}</div></td></tr>`;
+    }).join('') + '</table>';
+  $('cmpResult').innerHTML = summary + detail;
+};
+
+loadRuns();
+</script>
+</body>
+</html>

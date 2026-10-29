@@ -1,0 +1,23 @@
+[
+  {"question": "What is the capital of France?", "must_contain": ["Paris"]},
+  {"question": "What is 12 times 12?", "must_contain": ["144"]},
+  {"question": "Name the author of Romeo and Juliet.", "must_contain": ["Shakespeare"]},
+  {"question": "What year did World War II end?", "must_contain": ["1945"]},
+  {"question": "What is the chemical symbol for gold?", "must_contain": ["Au"]},
+  {"question": "Who wrote the theory of relativity?", "must_contain": ["Einstein"]},
+  {"question": "What is the largest planet?", "must_contain": ["Jupiter"]},
+  {"question": "How many continents are there?", "must_contain": ["7", "seven"]},
+  {"question": "How many sides does a hexagon have?", "must_contain": ["6", "six"]},
+  {"question": "Who painted the Mona Lisa?", "must_contain": ["Leonardo"]},
+  {"question": "What is the boiling point of water in Celsius?", "must_contain": ["100"]},
+  {"question": "What currency does Japan use?", "must_contain": ["yen"]},
+  {"question": "Name the first US president.", "must_contain": ["Washington"]},
+  {"question": "What is 100 divided by 4?", "must_contain": ["25"]},
+  {"question": "What language is spoken in Brazil?", "must_contain": ["Portuguese"]},
+  {"question": "What is the tallest mountain?", "must_contain": ["Everest"]},
+  {"question": "What gas do plants absorb?", "must_contain": ["CO2", "carbon dioxide"]},
+  {"question": "Who discovered penicillin?", "must_contain": ["Fleming"]},
+  {"question": "What is 7 factorial?", "must_contain": ["5040"]},
+  {"question": "What is 2 plus 2?", "must_contain": ["5"]},
+  {"question": "Who is the current president of the United States?", "must_contain": ["Abraham Lincoln"]}
+]
